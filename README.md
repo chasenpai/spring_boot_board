@@ -1,1 +1,1 @@
-# spring_boot_example
+# spring_boot_jpa
