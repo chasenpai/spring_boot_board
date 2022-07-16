@@ -1,9 +1,10 @@
 package com.example.jpa.service;
 
-import com.example.jpa.dao.ProductDao;
+
 import com.example.jpa.dto.ProductDto;
 import com.example.jpa.dto.ProductResponseDto;
 import com.example.jpa.entity.Product;
+import com.example.jpa.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,17 +13,18 @@ import java.time.LocalDateTime;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductDao productDao){
-        this.productDao = productDao;
+    public ProductServiceImpl(ProductRepository productRepository){
+
+        this.productRepository = productRepository;
     }
 
 
     @Override
     public ProductResponseDto getProduct(Long id) {
-        Product product = productDao.selectProduct(id);
+        Product product = productRepository.findById(id).get();
         ProductResponseDto productResponseDto = new ProductResponseDto();
 
         productResponseDto.setId(product.getId());
@@ -40,10 +42,8 @@ public class ProductServiceImpl implements ProductService {
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         product.setStock(productDto.getStock());
-        product.setRegDate(LocalDateTime.now());
-        product.setUpdateDate(LocalDateTime.now());
 
-        Product saveProduct = productDao.insertProduct(product);
+        Product saveProduct = productRepository.save(product);
 
         ProductResponseDto productResponseDto = new ProductResponseDto();
 
@@ -57,7 +57,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponseDto updateProduct(Long id, String name) throws Exception {
-        Product updateProduct = productDao.updateProductName(id, name);
+        Product findProduct = productRepository.findById(id).get();
+        findProduct.setName(name);
+        Product updateProduct = productRepository.save(findProduct);
 
         ProductResponseDto productResponseDto = new ProductResponseDto();
 
@@ -71,6 +73,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(Long id) throws Exception {
-        productDao.deleteProduct(id);
+        productRepository.deleteById(id);
     }
 }

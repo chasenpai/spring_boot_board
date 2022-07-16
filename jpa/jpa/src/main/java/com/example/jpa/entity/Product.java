@@ -1,5 +1,6 @@
 package com.example.jpa.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,8 +10,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "product")
-@Getter @Setter @ToString
-public class Product {
+@Getter @Setter
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class Product extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,7 +28,17 @@ public class Product {
     @Column(nullable = false)
     private Integer stock;
 
-    private LocalDateTime regDate;
+    @OneToOne(mappedBy = "product")
+    @ToString.Exclude
+    private ProductDetail productDetail;
 
-    private LocalDateTime updateDate;
+    @ManyToOne
+    @JoinColumn(name = "provider_id")
+    @ToString.Exclude
+    private Provider provider;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    @ToString.Exclude
+    private Category category;
 }
