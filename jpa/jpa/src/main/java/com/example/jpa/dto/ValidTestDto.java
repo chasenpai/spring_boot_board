@@ -1,5 +1,6 @@
 package com.example.jpa.dto;
 
+import com.example.jpa.common.Phone;
 import lombok.*;
 
 import javax.validation.constraints.*;
@@ -16,7 +17,7 @@ public class ValidTestDto {
     @Email
     String email;
 
-    @Pattern(regexp = "01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$")
+    @Phone
     String phone;
 
     @Min(value = 20) @Max(value = 60)

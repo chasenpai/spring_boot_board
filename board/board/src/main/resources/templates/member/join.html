@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div id="wrap" style="margin-top: 25px;">
+        <div sec:authorize="isAuthenticated()">
+            <form action="/member" method="post" th:object="${memberDto}">
+                <div class="input-group mb-3">
+                    <input name="username" th:value="${member.username}" type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1" readonly="readonly">
+                </div>
+                <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error"></p>
+                <div class="input-group mb-3">
+                    <input th:field="*{password}" type="password" class="form-control" placeholder="비밀번호" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+                <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error"></p>
+                <div class="input-group mb-3">
+                    <input th:field="*{pwdCheck}" type="password" class="form-control" placeholder="비밀번호 확인" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+                <p th:if="${#fields.hasErrors('pwdCheck')}" th:errors="*{pwdCheck}" class="error"></p>
+                <br>
+                <input type="hidden" name="memberId" th:value="${member.id}">
+                <div>
+                    <a th:href="'/members/delete/' + ${member.id}"><button type="button" id="del" class="btn btn-light">탈퇴하기</button></a>
+                    <button type="submit" id="info" class="btn btn-light">변경하기</button>
+
+                </div>
+            </form>
+        </div>
+        <div sec:authorize="isAnonymous()">
+            <form action="/members/join" method="post" th:object="${memberDto}">
+                <div class="input-group mb-3">
+                    <input th:field="*{username}" type="text" class="form-control" placeholder="아이디" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+                <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error"></p>
+                <div class="input-group mb-3">
+                    <input th:field="*{password}" type="password" class="form-control" placeholder="비밀번호" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+                <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error"></p>
+                <div class="input-group mb-3">
+                    <input th:field="*{pwdCheck}" type="password" class="form-control" placeholder="비밀번호 확인" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+                <p th:if="${#fields.hasErrors('pwdCheck')}" th:errors="*{pwdCheck}" class="error"></p>
+                <br>
+                <div>
+                    <button type="submit" id="join" class="btn btn-light">가입완료</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<th:block layout:fragment="css">
+
+    <style>
+        .error{
+            color: red;
+        }
+        #join, #info, #del{
+            float: right;
+            background-color: #e3f2fd;
+        }
+        #info{
+            margin-right: 20px;
+        }
+
+        #wrap{
+            max-width: 800px;
+            margin: 0 auto;
+            margin-top: 25px;
+        }
+
+    </style>
+
+</th:block>
+
+<th:block layout:fragment="script">
+
+    <script th:inline="javascript">
+        $(document).ready(function(){
+            var joinError = [[${joinError}]];
+            if(joinError != null){
+                alert(joinError);
+            }
+        });
+
+    </script>
+
+</th:block>
+
+</body>
+</html>
