@@ -10,7 +10,7 @@
 <body>
 <div layout:fragment="content">
 
-    <div id="wrap" style="margin-top: 25px;">
+    <div id="wrap" style="margin-top: 50px;">
         <div sec:authorize="isAuthenticated()">
             <form action="/member" method="post" th:object="${memberDto}">
                 <div class="input-group mb-3">
@@ -50,7 +50,7 @@
                 <p th:if="${#fields.hasErrors('pwdCheck')}" th:errors="*{pwdCheck}" class="error"></p>
                 <br>
                 <div>
-                    <button type="submit" id="join" class="btn btn-light">가입완료</button>
+                    <button type="submit" id="join" class="btn btn-primary">가입완료</button>
                 </div>
             </form>
         </div>
@@ -66,7 +66,6 @@
         }
         #join, #info, #del{
             float: right;
-            background-color: #e3f2fd;
         }
         #info{
             margin-right: 20px;

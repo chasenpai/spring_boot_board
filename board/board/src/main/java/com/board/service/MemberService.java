@@ -30,7 +30,7 @@ public class MemberService implements UserDetailsService {
     }
 
     public void save(MemberDto memberDto){
-        memberDto.setRole(Role.USER);
+        memberDto.setRole(Role.ROLE_USER);
 
         Member member = new Member(memberDto);
         memberRepository.save(member);
@@ -55,9 +55,11 @@ public class MemberService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberRepository.findByUsername(username);
         lastLoginDate(username);
-        if(member == null){
+
+        if(member == null || member.getState() != null){
             throw new UsernameNotFoundException(username);
         }
+
         return new UserAccount(member);
     }
 }

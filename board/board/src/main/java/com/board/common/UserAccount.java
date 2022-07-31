@@ -19,4 +19,6 @@ public class UserAccount extends User {
         super(member.getUsername(), member.getPassword(), Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
         this.member = member;
     }
+
+
 }

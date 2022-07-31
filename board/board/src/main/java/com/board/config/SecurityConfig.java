@@ -33,10 +33,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("username")
                 .failureUrl("/members/login/error")
                 .and()
+
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/members/logout"))
                 .logoutSuccessUrl("/boards/list")
                 .and()
+
+//                .authorizeRequests()
+//                .mvcMatchers("/board/list", "/member/login", "/member/join").permitAll()
+//                .mvcMatchers("/member/info")
+//                .and()
+
+
                 .csrf()
                 .disable();
 

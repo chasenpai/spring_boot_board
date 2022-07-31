@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout/layout}">
 <head>
     <meta charset="UTF-8">
@@ -34,9 +35,86 @@
             </tbody>
         </table>
         <br>
-        <button type="button" id="write" class="btn btn-light" onclick="location.href='/boards/write'">글쓰기</button>
+        <div sec:authorize="isAuthenticated()">
+            <button type="button" id="write" class="btn btn-primary" onclick="location.href='/boards/write'">글쓰기</button>
+        </div>
+        <br>
+        <br>
+
+        <input type="hidden" name="select" th:value="${select}">
+        <input type="hidden" name="search" th:value="${search}">
+
+        <!--
+        <div th:with="start=${(boards.number/maxPage)*maxPage + 1}, end=(${(boards.totalPages == 0) ? 1 : (start + (maxPage - 1)
+        < boards.totalPages ? start + (maxPage - 1) : boards.totalPages)})" >
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${boards.number eq 0}?'disabled':''">
+                    <a th:href="@{'/boards/list/' + ${boards.number-1} + '?search=' + ${searchDto.search} + '?select=' + ${searchDto.select}}" aria-label='Previous' class="page-link">
+                        <span aria-hidden='true'>이전</span>
+                    </a>
+                </li>
+                <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${boards.number eq page-1}?'active':''">
+                    <a th:href="@{'/boards/list/'+ ${page-1} +'?search=' + ${searchDto.search} + '?select=' + ${searchDto.select}}" th:inline="text" class="page-link">[[${page}]]</a>
+                </li>
+                <li class="page-item" th:classappend="${boards.number+1 ge boards.totalPages}?'disabled':''">
+                    <a th:href="@{'/boards/list/'+ ${boards.number+1} +'?search=' + ${searchDto.search} + '?select=' + ${searchDto.select}}" aria-label='Next' class="page-link">
+                        <span aria-hidden='true'>다음</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        -->
+        <div th:with="start=${(boards.number/maxPage) * maxPage + 1}, end=(${(boards.totalPages == 0) ? 1 : (start + (maxPage - 1)
+        < boards.totalPages ? start + (maxPage - 1) : boards.totalPages)})">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${boards.first}?'disabled'">
+                    <a class="page-link" th:onclick="'javascript:page(' + ${boards.number - 1} + ')'">이전</a>
+                </li>
+                <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"
+                    th:classappend="${boards.number eq page-1}?'active':''">
+                    <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]</a>
+                </li>
+
+                <li class="page-item" th:classappend="${boards.last}?'disabled'">
+                    <a th:onclick="'javascript:page(' + ${boards.number + 1} + ')'" aria-label='Next'
+                       class="page-link">
+                        <span aria-hidden='true'>다음</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <br>
+        <form style="margin-left: 230px;" class="d-flex" th:object="${searchDto}">
+            <select style="width:80px; margin-right: 8px;" class="form-select" aria-label="Default select example" id="select" th:field="*{select}">
+                <option value="title" selected>제목</option>
+                <option value="createdBy">작성자</option>
+            </select>
+            <input th:field="*{search}" style="width:200px;" id="search" class="form-control me-2" type="search" placeholder="" aria-label="Search">
+            <button id="searchBtn" class="btn btn-primary" type="submit" style="min-width: 60px; min-height: 24px;">검색</button>
+        </form>
     </div>
 </div>
+<!--
+    접근 제한
+    비밀번호 변경
+ -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function(){
+            $("#searchBtn").on("click",function(e) {
+                e.preventDefault();
+                page(0);
+            });
+        });
+
+        function page(page){
+            var select = $("#select").val();
+            var search = $("#search").val();
+
+            location.href="/boards/list/" + page + "?select=" + select + "&search=" + search;
+        }
+    </script>
+</th:block>
 
 <th:block layout:fragment="css">
     <style>
@@ -47,7 +125,6 @@
         }
         #write{
             float: right;
-            background-color: #e3f2fd;
         }
 
     </style>

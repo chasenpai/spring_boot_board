@@ -13,6 +13,7 @@
     <div id="wrap">
 
         <form method="post" th:object="${boardDto}">
+            <input type="hidden" th:field="*{id}">
             <div class="input-group mb-3">
                 <input th:field="*{title}" type="text" class="form-control" placeholder="제목" aria-label="Username" aria-describedby="basic-addon1" maxlength="100">
             </div>
@@ -22,10 +23,13 @@
             </div>
             <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="error"></p>
             <br>
-            <div th:if="${#strings.isEmpty(boardDto.id)}">
-                <button id="save" th:formaction="@{/boards/write}" type="submit" class="btn btn-light">저장</button>
-            </div>
 
+            <div th:if="${#strings.isEmpty(boardDto.id)}">
+                <button id="save" th:formaction="@{/boards/write}" type="submit" class="btn btn-primary">저장</button>
+            </div>
+            <div th:unless="${#strings.isEmpty(boardDto.id)}">
+                <button id="update" th:formaction="@{'/boards/update/' + ${boardDto.id}}" type="submit" class="btn btn-primary">수정</button>
+            </div>
         </form>
 
     </div>
@@ -37,13 +41,14 @@
         #wrap{
             max-width: 800px;
             margin: 0 auto;
-            margin-top: 25px;
+            margin-top: 50px;
         }
-        #save{
+        #save, #update{
             float: right;
-            background-color: #e3f2fd;
         }
-
+        .error{
+            color: red;
+        }
     </style>
 </th:block>
 

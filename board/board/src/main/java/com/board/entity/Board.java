@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "board")
@@ -34,8 +35,28 @@ public class Board extends BaseEntity {
         this.content = boardDto.getContent();
     }
 
+    public void update(BoardDto boardDto){
+        this.title = boardDto.getTitle();
+        this.content = boardDto.getContent();
+    }
 
 
-
+//    private String createdBy;
+//
+//    private String lastModifiedBy;
+//
+//    private LocalDateTime createdDate;
+//
+//    private LocalDateTime lastModifiedDate;
+//
+//    public Board(BoardDto boardDto){
+//        this.id = boardDto.getId();
+//        this.title = boardDto.getTitle();
+//        this.content = boardDto.getContent();
+//        this.createdBy = boardDto.getCreatedBy();
+//        this.lastModifiedBy = boardDto.getLastModifiedBy();
+//        this.createdDate = boardDto.getCreatedDate();
+//        this.lastModifiedDate = boardDto.getLastModifiedDate();
+//    }
 
 }

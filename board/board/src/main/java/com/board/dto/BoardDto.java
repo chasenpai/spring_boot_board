@@ -20,6 +20,8 @@ public class BoardDto {
 
     private String createdBy;
 
+    private String lastModifiedBy;
+
     private LocalDateTime createdDate;
 
     private LocalDateTime lastModifiedDate;
@@ -30,8 +32,11 @@ public class BoardDto {
         this.content = board.getContent();
         this.hits = board.getHits();
         this.createdBy = board.getCreatedBy();
+        this.lastModifiedBy = board.getLastModifiedBy();
         this.createdDate = board.getCreatedDate();
         this.lastModifiedDate = board.getLastModifiedDate();
     }
+
+
 
 }
